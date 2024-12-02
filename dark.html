@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jailove Mewara - iOS Developer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Modern iOS colors */
+            --accent-1: #FF375F;
+            --accent-2: #40C8E0;
+            --accent-3: #30D158;
+            --system-background: #000000;
+            --card-background: rgba(28, 28, 30, 0.8);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        @supports (backdrop-filter: blur(20px)) {
+            :root {
+                --card-background: rgba(28, 28, 30, 0.6);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--system-background);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000, #1c1c1e);
+        }
+
+        /* iOS 16 Style Navigation Bar */
+        .nav-bar {
+            background: rgba(28, 28, 30, 0.8);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem;
+            text-align: center;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .nav-title {
+            font-weight: 700;
+            font-size: 20px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: translateZ(20px);
+        }
+
+        /* Modern Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 6rem 1.5rem 2rem;
+            perspective: 1000px;
+        }
+
+        /* 3D Profile Card */
+        .profile-card {
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateZ(50px) rotateX(5deg);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            transform-style: preserve-3d;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            border: 3px solid transparent;
+            background: linear-gradient(45deg, var(--accent-1), var(--accent-2)) border-box;
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: destination-out;
+            transform: translateZ(30px);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: translateZ(40px) scale(1.05);
+        }
+
+        .profile-info {
+            transform-style: preserve-3d;
+        }
+
+        .profile-info h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: translateZ(20px);
+        }
+
+        .profile-info h2 {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transform: translateZ(15px);
+        }
+
+        /* Modern Skills */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+            transform-style: preserve-3d;
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            transform: translateZ(10px);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .skill-tag:hover {
+            transform: translateZ(20px) scale(1.05);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Modern Sections */
+        .section {
+            background: var(--card-background);
+            border-radius: 24px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .section:hover {
+            transform: translateZ(30px);
+        }
+
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 20px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: translateZ(20px);
+        }
+
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+            transform-style: preserve-3d;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+
+        .app-card:hover {
+            transform: translateZ(30px) scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .app-info {
+            padding: 1.5rem;
+            transform-style: preserve-3d;
+        }
+
+        .app-name {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 0.5rem;
+            transform: translateZ(15px);
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 1.5rem;
+            transform: translateZ(10px);
+        }
+
+        /* Modern iOS Button */
+        .ios-button {
+            background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transform: translateZ(20px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ios-button:hover {
+            transform: translateZ(30px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Experience Items */
+        .experience-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .experience-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateZ(20px);
+        }
+
+        .company-name {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 0.5rem;
+            color: var(--accent-2);
+            transform: translateZ(15px);
+        }
+
+        .duration {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 1rem;
+            transform: translateZ(10px);
+        }
+
+        .experience-details {
+            color: var(--text-secondary);
+            transform: translateZ(5px);
+        }
+
+        /* Contact Links */
+        .contact-info {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            transform-style: preserve-3d;
+        }
+
+        .contact-item {
+            color: var(--accent-2);
+            text-decoration: none;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transform: translateZ(15px);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            color: var(--accent-1);
+            transform: translateZ(25px);
+        }
+
+        /* iOS List */
+        .ios-list {
+            list-style: none;
+            transform-style: preserve-3d;
+        }
+
+        .ios-list-item {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .ios-list-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateZ(15px);
+        }
+
+        .ios-list-item span {
+            color: var(--accent-2);
+            font-size: 14px;
+            transform: translateZ(10px);
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-card:hover,
+            .section:hover {
+                transform: none;
+            }
+        }
+
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-1);
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">Jailove Mewara</div>
+    </div>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="https://i.ibb.co/1bNwKmS/Whats-App-Image-2024-12-02-at-18-46-07.jpg" alt="Jailove Mewara" class="profile-img">
+                <div class="profile-info">
+                    <h1>Jailove Mewara</h1>
+                    <h2>Sr. iOS Developer</h2>
+                    <div class="contact-info">
+                        <a href="mailto:jailovemewara@gmail.com" class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>jailovemewara@gmail.com</span>
+                        </a>
+                        <a href="tel:+918107040480" class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+91-8107040480</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="skills">
+                <span class="skill-tag">Swift</span>
+                <span class="skill-tag">SwiftUI</span>
+                <span class="skill-tag">Objective-C</span>
+                <span class="skill-tag">React Native</span>
+                <span class="skill-tag">IoT Integration</span>
+                <span class="skill-tag">Here Maps SDK</span>
+                <span class="skill-tag">UI/UX Design</span>
+                <span class="skill-tag">Core Animation</span>
+                <span class="skill-tag">Core Data</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-user-tie"></i> Professional Summary
+            </div>
+            <div class="experience-item">
+                6+ years of experience in iOS development environment with expertise in all phases of the project lifecycle. Proficient in Swift, Objective-C, React Native, and IoT integration. Successfully managed teams and delivered high-quality solutions for major automotive clients.
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-briefcase"></i> Experience
+            </div>
+            <div class="experience-item">
+                <div class="company-name">InfarSight LLC (USA)</div>
+                <div class="duration">Jan 2023 - Dec 2024 • 2 Years</div>
+                <div class="experience-details">
+                    Led development of advanced navigation solutions for automotive clients including Ampere, TVS, Bajaj, and Royal Enfield.
+                    <ul class="ios-list">
+                        <li>Developed custom map themes for improved usability</li>
+                        <li>Integrated 3D Maps for enhanced navigation</li>
+                        <li>Implemented custom markers and POI</li>
+                        <li>Built advanced search functionality</li>
+                        <li>Developed offline maps support</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="experience-item">
+                <div class="company-name">Scytale Alpha Private Limited</div>
+                <div class="duration">Jan 2022 - Dec 2022 • 1 Year</div>
+                <div class="experience-details">
+                    Developed secure messaging applications with advanced encryption features.
+                    <ul class="ios-list">
+                        <li>Element Messenger: Matrix SDK implementation</li>
+                        <li>Vani Messenger: OTR encryption system</li>
+                        <li>SAI Messenger: XMPP Framework integration</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="experience-item">
+                <div class="company-name">ASAG Androapps Pvt. Ltd.</div>
+                <div class="duration">Dec 2020 - Dec 2021 • 1 Year 1 Month</div>
+                <div class="experience-details">
+                    <ul class="ios-list">
+                        <li>Proptia: Developed visitor management software for residential properties</li>
+                        <li>VIXXIT Technician: Built service booking platform for home services</li>
+                        <li>S.H.A.P.E: Created sports and health activity tracking application</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-mobile-alt"></i> Published Apps
+            </div>
+            <div class="app-grid">
+                <div class="app-card">
+                    <div class="app-info">
+                        <div class="app-name">Vani Messenger</div>
+                        <div class="app-description">Secure messenger with effective communication and OTR encryption.</div>
+                        <a href="https://apps.apple.com/us/app/vani-sigma/id1637566801" class="ios-button">
+                            <i class="fab fa-app-store"></i>
+                            View on App Store
+                        </a>
+                    </div>
+                </div>
+                <div class="app-card">
+                    <div class="app-info">
+                        <div class="app-name">Proptia</div>
+                        <div class="app-description">Cloud-based visitor management software for residential properties.</div>
+                        <a href="https://apps.apple.com/in/app/proptia/id1547519301" class="ios-button">
+                            <i class="fab fa-app-store"></i>
+                            View on App Store
+                        </a>
+                    </div>
+                </div>
+                <div class="app-card">
+                    <div class="app-info">
+                        <div class="app-name">VIXXIT Technician</div>
+                        <div class="app-description">At-home services booking platform for service providers.</div>
+                        <a href="https://apps.apple.com/in/app/vixxit-technician/id1628550614" class="ios-button">
+                            <i class="fab fa-app-store"></i>
+                            View on App Store
+                        </a>
+                    </div>
+                </div>
+                <div class="app-card">
+                    <div class="app-info">
+                        <div class="app-name">S.H.A.P.E</div>
+                        <div class="app-description">Sports, Health, Ability, Performance, and Emotions tracking app.</div>
+                        <a href="https://apps.apple.com/in/app/s-h-a-p-e/id1577702902" class="ios-button">
+                            <i class="fab fa-app-store"></i>
+                            View on App Store
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-laptop-code"></i> Technical Skills
+            </div>
+            <div class="ios-list">
+                <div class="ios-list-item">iOS Development<span>Swift, SwiftUI, Objective-C</span></div>
+                <div class="ios-list-item">UI/UX Design<span>Interface Builder, Storyboards</span></div>
+                <div class="ios-list-item">Backend Integration<span>REST, Socket.io, IoT, MQTT</span></div>
+                <div class="ios-list-item">Frameworks<span>Core Data, Core Location, ML Kit</span></div>
+                <div class="ios-list-item">Development Tools<span>Xcode, GitLab, Fastlane</span></div>
+                <div class="ios-list-item">Databases<span>Realm, Core Data, Firebase</span></div>
+                <div class="ios-list-item">CI/CD<span>GitLab, Fastlane, SwiftLint</span></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-certificate"></i> Certifications
+            </div>
+            <div class="ios-list">
+                <div class="ios-list-item">Frontend Development<span>HTML, CSS, JavaScript</span></div>
+                <div class="ios-list-item">Mobile Development<span>React Native Fundamentals</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 3D Tilt Effect for Cards
+        document.querySelectorAll('.profile-card, .section').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(50px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+            });
+        });
+
+        // Smooth Scroll Animation for Navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Progressive Loading Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0) translateZ(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px) translateZ(0)';
+                observer.observe(section);
+            });
+        });
+
+        // Dynamic Navbar
+        const nav = document.querySelector('.nav-bar');
+        let lastScroll = 0;
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll <= 0) {
+                nav.style.opacity = '1';
+                nav.style.transform = 'translateY(0)';
+            }
+            
+            if (currentScroll > lastScroll && currentScroll > 50) {
+                nav.style.opacity = '0';
+                nav.style.transform = 'translateY(-100%)';
+            } else {
+                nav.style.opacity = '1';
+                nav.style.transform = 'translateY(0)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
